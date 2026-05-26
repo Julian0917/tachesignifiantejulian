@@ -2,16 +2,12 @@ package com.julian.tachesignifiantejulian.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 
-@Controller
+@Controller // On garde @Controller ici pour qu'il cherche un fichier HTML
 public class scoreController {
 
     @GetMapping("/")
     public String index() {
-        return "Scoring Portal";
+        return "index"; // Doit correspondre à index.html dans le dossier templates
     }
 }
-
