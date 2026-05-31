@@ -1,6 +1,7 @@
 package com.julian.tachesignifiantejulian.controller;
 
 import com.julian.tachesignifiantejulian.model.Score;
+import com.julian.tachesignifiantejulian.repository.ScoreRepository;
 import com.julian.tachesignifiantejulian.service.ScoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,25 +16,35 @@ public class scoreController {
     @Autowired
     private ScoreService scoreService;
 
-    // Afficher la page d'accueil avec la liste des scores
+    @Autowired
+    private ScoreRepository scoreRepository;
+
+    // Afficher la page d'accueil avec la liste des scores directe du Repository
     @GetMapping("/")
     public String index(Model model) {
-        List<Score> scores = scoreService.getAllScores();
+        List<Score> scores = scoreRepository.findAll(); // On lit directement dans la base de données !
         model.addAttribute("scores", scores);
         return "index";
     }
 
     // Ajouter un nouveau match (Formulaire)
     @PostMapping("/scores/add")
-    public String addScore(@ModelAttribute Score score) {
-        scoreService.saveOrUpdateScore(score);
-        return "redirect:/"; // Recharge la page d'accueil avec le nouveau match
+    public String addScore(@RequestParam("points") int points) {
+        Score score = new Score();
+        score.setHomeTeam("Home Team");
+        score.setAwayTeam("Away Team");
+        score.setHomeScore(points);
+        score.setAwayScore(0);
+        score.setQuarter(1);
+
+        scoreRepository.save(score); // On sauvegarde directement dans la base de données !
+        return "redirect:/";
     }
 
     // Supprimer un match
     @GetMapping("/scores/delete/{id}")
     public String deleteScore(@PathVariable Long id) {
-        scoreService.deleteScoreById(id);
+        scoreRepository.deleteById(id);
         return "redirect:/";
     }
 }
